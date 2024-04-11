@@ -84,6 +84,9 @@ bool L1ObjMaker::makeGmtCandidates(const edm::Event &iEvent,  L1Obj::TYPE type, 
     obj.phi = it->hwPhi(); 
     obj.eta = it->hwEta();        // eta = hwEta/240.*2.61
     obj.pt  = it->hwPt();         // pt = (hwPt-1.)/2.
+    obj.upt =  it->hwPtUnconstrained();
+    obj.dxy = it->hwDXY();
+    
     obj.q   = it->hwQual();                             
     obj.bx = bxNumber;
     obj.charge = it->hwCharge();  // charge  =  pow(-1,hwSign)
@@ -123,12 +126,15 @@ bool L1ObjMaker::makeRegCandidates(const edm::Event &iEvent,  L1Obj::TYPE type, 
     obj.eta = it->hwEta();  // eta = hwEta/240.*2.61
     obj.pt = it->hwPt();         // pt = (hwPt-1.)/2.
     obj.charge = it->hwSign();   // charge=  pow(-1,hwSign)
+    obj.upt =  it->hwPtUnconstrained();
+    obj.dxy = it->hwDXY();
 
     std::map<int, int> hwAddrMap = it->trackAddress();
     obj.q   = it->hwQual();
     obj.hits   = hwAddrMap[0];
     obj.bx = bxNumber;
     obj.disc = hwAddrMap[2];
+    if (type==L1Obj::OMTF) { obj.upt = obj.disc; obj.disc=0;} 
     result.push_back(obj);
   }
   }

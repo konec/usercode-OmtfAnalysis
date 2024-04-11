@@ -18,7 +18,7 @@ public:
   
   enum TYPE { NONE, RPCb, RPCf, DT, CSC, GMT, RPCb_emu, RPCf_emu, GMT_emu, OMTF, OMTF_emu, BMTF, EMTF, uGMT, uGMT_emu };
 
-  int pt, eta, phi;
+  int pt, eta, phi, upt, dxy;
   int disc;
   int   bx, q, hits, charge, refLayer;
   TYPE  type;
@@ -39,7 +39,7 @@ public:
   }
   int chargeValue() const { return pow(-1,charge); }
 
-  ClassDef(L1Obj,4)
+  ClassDef(L1Obj,5)
 };
 
 

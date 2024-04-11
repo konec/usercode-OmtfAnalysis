@@ -17,13 +17,14 @@ process = cms.Process('OmtfTree')
 
 #dataDir='/afs/cern.ch/work/k/konec/data/runs/'
 #dataDir='/eos/home-k/konec/data/Run2023D-JetMET_JetHTJetPlusHOFilter-PromptReco-v1_RAW-RECO/'
-dataDir='/eos/home-k/konec/data/Run2023D-Muon_ZMu-PromptReco-v1_RAW-RECO/'
+#dataDir='/eos/home-k/konec/data/Run2023D-Muon_ZMu-PromptReco-v1_RAW-RECO/'
 #dataDir='/eos/cms/store/express/Run2022D/ExpressPhysics/FEVT/Express-v1/000/357/815/00000/'
 #dataDir='/eos/cms/store/express/Run2022E/ExpressPhysics/FEVT/Express-v1/000/359/691/00000/'
 #dataDir='/eos/cms/store/express/Run2022E/ExpressPhysics/FEVT/Express-v1/000/359/686/00000/'
 #dataDir='/eos/cms/store/express/Run2022E/ExpressPhysics/FEVT/Express-v1/000/359/685/00000/'
 #dataDir='/eos/cms/store/express/Run2022F/ExpressPhysics/FEVT/Express-v1/000/360/459/00000/'
 #dataDir='/eos/cms/store/express/Run2022G/ExpressPhysics/FEVT/Express-v1/000/362/728/00000/'
+dataDir='/eos/cms/store/express/Run2024A/ExpressCosmics/FEVT/Express-v1/000/378/179/00000/'
 lsCommand='ls -1 '+dataDir+'|grep root'
 #lsCommand='ls -1 '+dataDir+'|grep run362728_Muon'
 #lsCommand='ls -1 '+dataDir+'|grep JetMET | grep 362437 |grep root'
@@ -62,17 +63,20 @@ fileNames = cms.untracked.vstring(
 # '/store/data/Run2023D/Muon0/RAW-RECO/ZMu-PromptReco-v1/000/369/956/00000/545cafa8-7c69-40c1-a355-6dffd539c0b6.root',
 # '/store/data/Run2023D/Muon0/RAW-RECO/ZMu-PromptReco-v1/000/369/956/00000/548d4944-261b-499a-a9c7-8bdaf7991348.root',
 #'file:/eos/home-k/konec/data/Run2023D-Muon_ZMu-PromptReco-v1_RAW-RECO/run_369956_5cf85633-fce3-48cc-962e-8bce11540a67.root',
-#'/store/data/Run2023D/JetMET0/RAW-RECO/JetHTJetPlusHOFilter-PromptReco-v1/000/369/869/00000/7b83920b-1b4f-4961-83dd-94fbda7c3ff8.root',
 #'file:/eos/home-k/konec/data/Run2023D-JetMET_JetHTJetPlusHOFilter-PromptReco-v1_RAW-RECO/run_369870_81f7355b-2ac5-4469-ab0a-d9b413c9152b.root',
- 'root://xrootd-cms.infn.it//store/data/Run2023B/Muon0/RAW-RECO/ZMu-PromptReco-v1/000/367/079/00000/b01b794e-9075-4d42-b273-85b2bc66f13a.root',
+# 'root://xrootd-cms.infn.it//store/data/Run2023B/Muon0/RAW-RECO/ZMu-PromptReco-v1/000/367/079/00000/b01b794e-9075-4d42-b273-85b2bc66f13a.root',
+#  'file:/eos/cms/store/express/Run2024A/ExpressPhysics/FEVT/Express-v1/000/378/750/00000/ff8819ea-3cdd-4a3d-85c1-746732185400.root'
+ 'file:/eos/cms/store/express/Run2024A/ExpressCosmics/FEVT/Express-v1/000/378/179/00000/efe09b07-fa6c-4950-92af-53778b70ecfe.root',
+# 'file:/eos/cms/store/express/Run2024A/ExpressPhysics/FEVT/Express-v1/000/378/751/00000/6990d217-a954-42ff-ac85-6453d2712b68.root',
+#  'file:/eos/cms/store/express/Run2024A/ExpressPhysics/FEVT/Express-v1/000/378/239/00000/e62167f8-a9e6-4f6a-ae3b-fd6976b985f5.root',
   ),
-skipEvents =  cms.untracked.uint32(220)
+skipEvents =  cms.untracked.uint32(0)
 #skipEvents =  cms.untracked.uint32(19177)
 #skipEvents =  cms.untracked.uint32(19177+1117)
 #skipEvents =  cms.untracked.uint32(19177+1332)
 )
-#process.source.fileNames = files
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
+process.source.fileNames = files
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(25000) )
 
 #
 # import of standard configurations
@@ -104,19 +108,26 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_data', '')
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run3_data', '')
-process.GlobalTag.globaltag = '130X_dataRun3_Prompt_v3'
+process.GlobalTag.globaltag = '140X_dataRun3_Express_v2'
 
 #
 # message logger
 #
 process.load('FWCore.MessageService.MessageLogger_cfi')
+
 process.MessageLogger.cerr.FwkReport.reportEvery = 1
 process.MessageLogger.cerr.enableStatistics = False
-process.MessageLogger.cout.enable =False 
-#process.MessageLogger.cerr.threshold = "DEBUG"
+process.MessageLogger.cout.enable = False 
+process.MessageLogger.cerr.threshold = "DEBUG"
+process.MessageLogger.debugModules = cms.untracked.vstring('')
+process.MessageLogger.debugModules.append('esProd')
+process.MessageLogger.debugModules.append('L1TMuonOverlapPhase1ParamsESProducer')
+process.MessageLogger.debugModules.append('omtfParamsSource')
+process.MessageLogger.debugModules.append('omtfParams')
+#process.MessageLogger.debugModules.append('omtfEmulator')
 #process.MessageLogger.debugModules.append('muonRPCDigis')
-#process.MessageLogger.debugModules.append('omtfStage2Digis')
 process.MessageLogger.suppressWarning  = cms.untracked.vstring('*')
+
 
 process.digiCompare = cms.EDAnalyzer("OmtfDigiCompare",
   srcRPC_OMTF = cms.InputTag('omtfStage2Digis'),
@@ -166,9 +177,9 @@ process.digiCompare = cms.EDAnalyzer("OmtfDigiCompare",
 #     configXMLFile = cms.FileInPath("L1Trigger/L1TMuon/data/omtf_config/hwToLogicLayer_0x0004.xml"),
 #)
 
-#process.load('L1Trigger.L1TMuonOverlapPhase1.fakeOmtfParams_cff')
-#process.omtfParams.configXMLFile =  cms.FileInPath("L1Trigger/L1TMuon/data/omtf_config/hwToLogicLayer_0x0008.xml")
-#process.omtfParams.patternsXMLFiles = cms.VPSet( cms.PSet(patternsXMLFile = cms.FileInPath("L1Trigger/L1TMuon/data/omtf_config/Patterns_0x00012_oldSample_3_30Files_grouped1_classProb17_recalib2.xml")))
+process.load('L1Trigger.L1TMuonOverlapPhase1.fakeOmtfParams_cff')
+process.omtfParams.configXMLFile =  cms.FileInPath("L1Trigger/L1TMuonOverlapPhase1/omtf_config/hwToLogicLayer_0x0009.xml")
+process.omtfParams.patternsXMLFiles = cms.VPSet( cms.PSet(patternsXMLFile = cms.FileInPath("L1Trigger/L1TMuonOverlapPhase1/omtf_config/Patterns_ExtraplMB1nadMB2SimplifiedFP_t17_classProb17_recalib2_minDP0_v3.xml")))
 
 import L1Trigger.L1TMuonOverlapPhase1.simOmtfDigis_cfi
 process.omtfEmulator=L1Trigger.L1TMuonOverlapPhase1.simOmtfDigis_cfi.simOmtfDigis.clone() 
@@ -183,7 +194,7 @@ process.omtfEmulator.srcCSC = cms.InputTag('omtfStage2Digis')
 process.omtfEmulator.srcRPC = cms.InputTag('omtfStage2Digis')
 #process.omtfEmulator.patternsXMLFile = cms.FileInPath("L1Trigger/L1TMuon/data/omtf_config/Patterns_0x00012_oldSample_3_30Files_grouped1_classProb17_recalib2.xml")
 #
-process.omtfEmulator.dumpResultToXML = cms.bool(True)
+process.omtfEmulator.dumpResultToXML = cms.bool(False)
 #process.omtfEmulator.dumpResultToROOT = cms.bool(False)
 #process.omtfEmulator.eventCaptureDebug = cms.bool(False)
 #
@@ -196,6 +207,27 @@ process.omtfEmulator.dumpResultToXML = cms.bool(True)
 #process.omtfEmulator.rpcDropAllClustersIfMoreThanMax = cms.bool(True)
 #process.omtfEmulator.goldenPatternResultFinalizeFunction = cms.int32(9) # 2018: 0, 100g:9
 #process.omtfEmulator.noHitValueInPdf = cms.bool(True) #2018: False, 100g: True
+# from KArol's simOmtfDigis_extrapolSimple_cfi:
+
+process.omtfEmulator.noHitValueInPdf = cms.bool(True)
+process.omtfEmulator.minDtPhiQuality = cms.int32(2)
+process.omtfEmulator.minDtPhiBQuality = cms.int32(4)
+
+process.omtfEmulator.dtRefHitMinQuality = cms.int32(4)
+
+process.omtfEmulator.stubEtaEncoding = cms.string("bits")
+
+process.omtfEmulator.usePhiBExtrapolationFromMB1 = cms.bool(True)
+process.omtfEmulator.usePhiBExtrapolationFromMB2 = cms.bool(True)
+process.omtfEmulator.useStubQualInExtr = cms.bool(False)
+process.omtfEmulator.useEndcapStubsRInExtr = cms.bool(False)
+process.omtfEmulator.useFloatingPointExtrapolation = cms.bool(False)
+
+process.omtfEmulator.extrapolFactorsFilename = cms.FileInPath("L1Trigger/L1TMuonOverlapPhase1/omtf_config/ExtrapolationFactors_simple.xml")
+process.omtfEmulator.sorterType = cms.string("byLLH")
+process.omtfEmulator.ghostBusterType = cms.string("byRefLayer") # byLLH byRefLayer GhostBusterPreferRefDt
+process.omtfEmulator.goldenPatternResultFinalizeFunction = cms.int32(10)
+
 process.omtfEmulator.lctCentralBx = cms.int32(8);
 process.omtfEmulator.bxMin = cms.int32(-3)
 process.omtfEmulator.bxMax = cms.int32(4)
@@ -283,7 +315,7 @@ process.omtfTree = cms.EDAnalyzer("OmtfTreeMaker",
     warnNoColl = cms.untracked.bool(True)
   ),
 
-  onlyBestMuEvents = cms.bool(True),
+  onlyBestMuEvents = cms.bool(False),
   bestMuonFinder = cms.PSet(
     muonColl = cms.InputTag("muons"),
     beamSpot = cms.InputTag("offlineBeamSpot"),

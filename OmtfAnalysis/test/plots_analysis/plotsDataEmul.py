@@ -36,6 +36,34 @@ def cDataEmulNotAgree(canvas):
   c.Update()
   return
 
+def cDataEmulPtUncstr(canvas):
+  c = TCanvas('cDataEmulPtUncsrt','cDataEmulPtUncstr',900,900)
+  canvas.Add(c)
+  h = gROOT.FindObject('hDataEmulPtUncstr')
+  h.SetStats(0)
+  h.GetXaxis().SetRange(3,32)
+  h.GetYaxis().SetRange(3,32)
+  h.GetXaxis().SetTitleOffset(1.4)
+  h.GetYaxis().SetTitleOffset(1.4)
+  h.SetXTitle("data p_{T} uncstr [GeV]");
+  h.SetYTitle("emul p_{T} uncstr [GeV]");
+  h.SetMarkerSize(0.65)
+  c.SetLogx() 
+  c.SetLogy() 
+  h.DrawCopy('colo text')
+  xpos=0.60
+  ypos=0.86
+  legendFontSize = 0.030
+  t=TLatex()
+  t.SetNDC(1)
+  t.SetTextSize(legendFontSize)
+  t.SetTextColor(2)
+  value=h.GetBinContent( h.GetBin(0,0))
+  aver ="#pT (0,0): {0:6.0f}".format(value)
+  t.DrawLatex(xpos, ypos, aver)
+  c.Update()
+  return
+
 def cDataEmulPt(canvas):
   c = TCanvas('cDataEmulPt','cDataEmulPt',900,900)
   canvas.Add(c)
@@ -64,6 +92,7 @@ def cDataEmulPhi(canvas):
   h.SetXTitle("data phi [GMT code]");
   h.SetYTitle("emul phi [GMT code]");
   h.DrawCopy('colo')
+  c.Update()
   return
 
 def cDataEmulEta(canvas):
@@ -78,6 +107,7 @@ def cDataEmulEta(canvas):
   h.SetXTitle("data eta [GMT code]")
   h.SetYTitle("emul eta [GMT code]")
   h.DrawCopy('box')
+  c.Update()
   return
 
 def cDataEmulIssue(canvas):
@@ -93,7 +123,7 @@ def cDataEmulIssue(canvas):
   h.SetMaximum(1.5)
   h.SetMinimum(1.5e-4)
   h.SetStats(0)
-  h.GetXaxis().SetRange(2,7)
+  h.GetXaxis().SetRange(2,8)
   h.GetYaxis().SetTitleOffset(1.5)
   h.SetYTitle("event fraction");
   h.DrawCopy()
@@ -187,6 +217,7 @@ def plotAll(canvas) :
   cDataEmulIssue(canvas)
 #  cDataEmulHistory(canvas)
   cDataEmulPt(canvas)
+  cDataEmulPtUncstr(canvas)
   cDataEmulCompare(canvas)
   cDataEmulDistribution(canvas)
   cDataEmulBX(canvas)

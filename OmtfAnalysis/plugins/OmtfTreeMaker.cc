@@ -94,9 +94,6 @@ OmtfTreeMaker::~OmtfTreeMaker()
 
 void OmtfTreeMaker::analyze(const edm::Event &ev, const edm::EventSetup &es)
 {
-  //
-  // initial filter. Optionally do not further use events without muon
-  //
   event = new EventObj;
   event->bx = ev.bunchCrossing();
   event->orbit = ev.orbitNumber();
@@ -107,7 +104,11 @@ void OmtfTreeMaker::analyze(const edm::Event &ev, const edm::EventSetup &es)
 
   const reco::Muon * theMuon = theBestMuonFinder.result(ev,es);
 
-  if (theConfig.getParameter<bool>("onlyBestMuEvents") && (!theMuon) ) return;
+  // initial filter. Optionally do not further use events without muon
+  if (theConfig.getParameter<bool>("onlyBestMuEvents") && (!theMuon) ) {
+     delete event; event=0;
+     return;
+  }
   theCounter++;
 
   //
@@ -203,8 +204,9 @@ if (debug) std::cout << " pt_sim: " << pt_sim <<" eta_sim: "<<eta_sim<<" phi_sim
 */
 
 //
-bool debug=0;
+bool debug=1;
   if (debug) { // || l1ObjColl->selectByType(L1Obj::OMTF_emu)) {
+    std::cout<<"#"<<theCounter<<" "<< *event; // << std::endl;
     std::cout << *muonColl << std::endl;
     std::cout << *l1ObjColl << std::endl;
     std::cout << std::endl;

@@ -40,6 +40,7 @@ std::ostream & operator<< (std::ostream &out, const L1Obj &o)
   if (o.iProcessor >= 0){ out<<std::setw(2)<<o.iProcessor<<"_";} else { out<<std::setw(5); }
   out <<o.phi <<" (V: "<<std::setprecision(4)<<o.phiValue()<<std::setprecision(6)<<")";
   out <<", q: "<<o.q<<", bx: "<<o.bx;
+  out <<", upt: "<<o.upt<<", dxy: "<<o.dxy;
   if (o.type ==  L1Obj::OMTF || o. type== L1Obj::OMTF_emu) {
       out <<" track: "<< std::bitset<29>(o.hits) 
           <<" disc: "<< std::bitset<12>(o.disc)

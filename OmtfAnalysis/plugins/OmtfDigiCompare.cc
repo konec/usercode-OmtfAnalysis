@@ -238,7 +238,7 @@ void OmtfDigiCompare::analyzeRPC(const edm::Event &ev, const edm::EventSetup& es
 
   bool hasError = false;
   for (const auto & omtf : myOmtf ) {
-     if (omtf.bx != 0) continue;
+     if (abs(omtf.bx)>2) continue;
      theAllRpcDigisCnt++;     
      RPCDetId rpcDetId(omtf.det);
      int chamb   = rpcDetId.region()==0 ? rpcDetId.sector() : (rpcDetId.sector()-1)*6+rpcDetId.subsector();
@@ -254,7 +254,7 @@ void OmtfDigiCompare::analyzeRPC(const edm::Event &ev, const edm::EventSetup& es
      }
   }
   for (const auto & pact : myPact) {
-     if (pact.bx != 0) continue;
+     if (abs(pact.bx)>2) continue;
      theAllRpcDigisCnt++;     
      RPCDetId rpcDetId(pact.det);
      int chamb   = rpcDetId.region()==0 ? rpcDetId.sector() : (rpcDetId.sector()-1)*6+rpcDetId.subsector();
@@ -289,8 +289,7 @@ void OmtfDigiCompare::analyzeDT( const edm::Event &ev, const edm::EventSetup& es
   for (const auto &  chDigi : *dtphDigisBMTF.getContainer() ) {
     if (abs(chDigi.whNum()) != 2) continue;
     if (chDigi.stNum() ==4) continue;
-    if (chDigi.bxNum() != 0) continue;
-//    if (abs(chDigi.bxNum()) >2) continue;
+    if (abs(chDigi.bxNum()) >2) continue;
     if (chDigi.code()==7) continue;
     MyDigi myDigi = { DTChamberId(chDigi.whNum(),chDigi.stNum(),chDigi.scNum()+1).rawId(), chDigi.phi()+chDigi.phiB()+chDigi.code(), chDigi.bxNum() };
     if (myBmtfPh.end() == std::find(myBmtfPh.begin(), myBmtfPh.end(), myDigi)) myBmtfPh.push_back(myDigi);
@@ -320,8 +319,7 @@ void OmtfDigiCompare::analyzeDT( const edm::Event &ev, const edm::EventSetup& es
      if (chDigi.position(ipos)==1) eta |= (1 <<ipos);
      if (chDigi.quality(ipos)==1) etaQ |= (1 <<ipos);
     }
-    if (chDigi.bxNum() != 0) continue;
-//    if (abs(chDigi.bxNum()) >2) continue;
+    if (abs(chDigi.bxNum()) >2) continue;
     if (eta==0 || etaQ==0) continue;
     if (abs(chDigi.whNum()) != 2) continue;
     MyDigi myDigi = { DTChamberId(chDigi.whNum(),chDigi.stNum(),chDigi.scNum()+1).rawId(), (int)(eta+etaQ), chDigi.bxNum() };
@@ -346,9 +344,8 @@ void OmtfDigiCompare::analyzeDT( const edm::Event &ev, const edm::EventSetup& es
   for (const auto &  chDigi : *dtphDigisOMTF.getContainer() ) {
     if (abs(chDigi.whNum()) != 2) continue;
     if (chDigi.stNum() ==4) continue;
-    if (chDigi.bxNum() != 0) continue;
     if (chDigi.code()==7) continue;
-//    if (abs(chDigi.bxNum()) >2) continue;
+    if (abs(chDigi.bxNum()) >2) continue;
     MyDigi myDigi = { DTChamberId(chDigi.whNum(),chDigi.stNum(),chDigi.scNum()+1).rawId(), chDigi.phi()+chDigi.phiB()+chDigi.code(), chDigi.bxNum() };
     if (myOmtfPh.end() == std::find(myOmtfPh.begin(), myOmtfPh.end(), myDigi)) myOmtfPh.push_back(myDigi);
     if (debug) std::cout <<"DtDataWord64 OMTF    " 
@@ -370,8 +367,7 @@ void OmtfDigiCompare::analyzeDT( const edm::Event &ev, const edm::EventSetup& es
   if (debug) std::cout <<" DTTh digis from OMTF " << dtthDigisOMTF.getContainer()->size()<< std::endl;
   std::vector<MyDigi> myOmtfTh;
   for (const auto &  chDigi : *dtthDigisOMTF.getContainer() ) {
-    if (chDigi.bxNum() != 0) continue;
-//    if (abs(chDigi.bxNum()) >2) continue;
+    if (abs(chDigi.bxNum()) >2) continue;
     unsigned int eta = 0;
     unsigned int etaQ = 0;
     for (unsigned int ipos=0; ipos <7; ipos++) {
@@ -454,8 +450,8 @@ void OmtfDigiCompare::analyzeOMTF( const edm::Event &ev, const edm::EventSetup& 
   std::vector<MyDigi> myData;
   for (l1t::RegionalMuonCandBxCollection::const_iterator it = digiCollectionOMTF_DATA.product()->begin(bxNumber);
        it != digiCollectionOMTF_DATA.product()->end(bxNumber); ++it) {
-    //MyDigi myDigi = { (unsigned int)it->processor(),  (int)it->hwPhi()+(int)it->hwEta()+(int)it->hwPt(), bxNumber};
-    MyDigi myDigi = { (unsigned int)it->processor(),  it->hwPt(), bxNumber};
+    MyDigi myDigi = { (unsigned int)it->processor(),  (int)it->hwPhi()+(int)it->hwEta()+(int)it->hwPt(), bxNumber};
+    //MyDigi myDigi = { (unsigned int)it->processor(),  it->hwPt(), bxNumber};
     if (debug) std::cout <<"PT: "<<it->hwPt()<<" ETA: "<<it->hwEta()<<" PHI: "<<it->hwPhi()<<" link: "<<it->link() << std::endl;
     if (debug) std::cout <<" MyDigi (DATA): " << myDigi << std::endl;
     if (myData.end() == std::find(myData.begin(), myData.end(), myDigi)) myData.push_back(myDigi);
@@ -470,9 +466,9 @@ void OmtfDigiCompare::analyzeOMTF( const edm::Event &ev, const edm::EventSetup& 
   std::vector<MyDigi> myEmul;
   for (l1t::RegionalMuonCandBxCollection::const_iterator it = digiCollectionOMTF_EMUL.product()->begin(bxNumber);
        it != digiCollectionOMTF_EMUL.product()->end(bxNumber); ++it) {
-    // MyDigi myDigi = { (unsigned int)it->processor(),  )it->hwPhi()+(int)it->hwEta()+(int)it->hwPt(), bxNumber};
+    MyDigi myDigi = { (unsigned int)it->processor(),  (int)it->hwPhi()+(int)it->hwEta()+(int)it->hwPt(), bxNumber};
+    //MyDigi myDigi = { (unsigned int)it->processor(),  it->hwPt(), bxNumber};
     if (debug) std::cout <<"PT: "<<it->hwPt()<<" ETA: "<<it->hwEta()<<" PHI: "<<it->hwPhi()<<" link: "<<it->link() << std::endl;
-    MyDigi myDigi = { (unsigned int)it->processor(),  it->hwPt(), bxNumber};
     if (debug) std::cout <<" MyDigi (EMUL): " << myDigi << std::endl;
     if (myEmul.end() == std::find(myEmul.begin(), myEmul.end(), myDigi)) myEmul.push_back(myDigi);
     else if (debug) std::cout <<" DUPLICATE. " << std::endl;

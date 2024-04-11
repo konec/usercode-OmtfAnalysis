@@ -1,4 +1,4 @@
-#!/cvmfs/cms.cern.ch/slc7_amd64_gcc11/cms/cmssw/CMSSW_13_2_4/external/slc7_amd64_gcc11/bin/python3
+#!/cvmfs/cms.cern.ch/slc7_amd64_gcc12/cms/cmssw/CMSSW_14_0_4/external/slc7_amd64_gcc12/bin/python3
 
 import sys
 import math
@@ -30,8 +30,8 @@ canvas = TObjArray()
 #plotsMuon.plotAll(canvas)
 #plotsEff.plotAll(canvas)
 #plotsSecMuSel.plotAll(canvas)
-#plotsDataEmul.plotAll(canvas)
-plotsTime.plotAll(canvas)
+plotsDataEmul.plotAll(canvas)
+#plotsTime.plotAll(canvas)
 
 #plotsMenu.plotAll(canvas)
 #plotsSynch.plotAll(canvas)

@@ -23,6 +23,7 @@ namespace {
   TH1D *hDataEmulIssue;
   TH2D *hDataEmulCompareComb;
   TH2D *hDataEmulPt, *hDataEmulPhi, *hDataEmulEta;
+  TH2D *hDataEmulPtUncstr;
   TH2D *hDataEmulNotAgreeEta, *hDataEmulNotAgreePhi;
   TH1D *hDataEmulBxD, *hDataEmulBxE;
   TH2D *hDataEmulCheckProb;
@@ -97,9 +98,10 @@ void AnaDataEmul::init(TObjArray& histos)
   hDataEmulCompareComb->GetYaxis()->SetBinLabel(7,"Rpc Only");
 
   hDataEmulPt = new TH2D("hDataEmulPt","hDataEmulPt",32, ptBins, 32, ptBins); histos.Add(hDataEmulPt);
+  hDataEmulPtUncstr = new TH2D("hDataEmulPtUncstr","hDataEmulPtUncstr",32, ptBins, 32, ptBins); histos.Add(hDataEmulPtUncstr);
   hDataEmulPhi = new TH2D("hDataEmulPhi","hDataEmulPhi",150,-30.,120.,150.,-30.,120.); histos.Add(hDataEmulPhi);
 
-  hDataEmulIssue = new TH1D("hDataEmulIssue","hDataEmulIssue",7,  0.5, 7.5); histos.Add(hDataEmulIssue);
+  hDataEmulIssue = new TH1D("hDataEmulIssue","hDataEmulIssue",8,  0.5, 8.5); histos.Add(hDataEmulIssue);
   hDataEmulIssue->GetXaxis()->SetBinLabel(1," ");
   hDataEmulIssue->GetXaxis()->SetBinLabel(2,"hits");
   hDataEmulIssue->GetXaxis()->SetBinLabel(3,"p_{T}");
@@ -108,6 +110,7 @@ void AnaDataEmul::init(TObjArray& histos)
   hDataEmulIssue->GetXaxis()->SetBinLabel(5,"eta");
   hDataEmulIssue->GetXaxis()->SetBinLabel(6,"charge");
   hDataEmulIssue->GetXaxis()->SetBinLabel(7,"quality");
+  hDataEmulIssue->GetXaxis()->SetBinLabel(8,"p_{T} uncstr");
 
 //  double etaBins[nEtaBins+1]; 
 //  for (unsigned int idx=0; idx<nEtaBins; idx++) etaBins[idx]=etaBinVal[idx]-0.1; 
@@ -181,7 +184,7 @@ void AnaDataEmul::run(EventObj* event, L1ObjColl * coll)
   }
 
   //
-  // position districution
+  // position distribution
   //
   {
   std::vector<L1Obj> vdata = coll->selectByType(L1Obj::OMTF).selectByBx(); 
@@ -268,6 +271,7 @@ void AnaDataEmul::run(EventObj* event, L1ObjColl * coll)
       if (!dt &&  csc && !rpc) layerComb = 6;
       if (!dt && !csc &&  rpc) layerComb = 7;
       hDataEmulCompareComb->Fill(diff, layerComb); 
+      if (diff !=agree && layerComb==5) std::cout <<" EVENT: " << *event << std::endl<<*emul<<std::endl<<*data<<std::endl;
 
       bool unique = data && emul && (vdata.size() == 1) && (emulColl.getL1Objs().size() == 1) && (makeName(*data)==makeName(*emul));
       if(unique && !(diff==agree) ) {
@@ -282,6 +286,7 @@ void AnaDataEmul::run(EventObj* event, L1ObjColl * coll)
     
       if (unique) {
         hDataEmulPt->Fill( code2pt(data->pt), code2pt(emul->pt) );
+        hDataEmulPtUncstr->Fill( code2pt(data->upt), code2pt(emul->upt) );
         hDataEmulPhi->Fill(data->phi, emul->phi);
         hDataEmulIssue->Fill(1);
         if (data->hits != emul->hits)          hDataEmulIssue->Fill(2);
@@ -291,6 +296,7 @@ void AnaDataEmul::run(EventObj* event, L1ObjColl * coll)
         if ( data->charge !=  emul->charge)    hDataEmulIssue->Fill(6);
 //      if ( (data->q >>2) != (emul->q >>2) )  hDataEmulIssue->Fill(7);
         if ( (data->q    ) != (emul->q    ) )  hDataEmulIssue->Fill(7);
+        if ( (data->upt & 0b11111 ) != (emul->upt & 0b11111) )     hDataEmulIssue->Fill(8);
 //        if ( (data->q    ) != (emul->q    ) ) std::cout << *event << "   QQ: "<< data->q<<emul->q << std::endl;
       }
       if(unique) { hDataEmulEta->Fill(code2HistoBin(abs(data->eta)), code2HistoBin(abs(emul->eta)) ); }

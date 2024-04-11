@@ -21,7 +21,8 @@
     <version ClassVersion="1" checksum="3020723748"/>
    </class>
 
-   <class name="L1Obj" ClassVersion="4">
+   <class name="L1Obj" ClassVersion="5">
+    <version ClassVersion="5" checksum="3917599947"/>
     <version ClassVersion="4" checksum="1845249499"/>
     <version ClassVersion="3" checksum="3211239651"/>
     <version ClassVersion="2" checksum="3302072089"/>

@@ -88,7 +88,7 @@ process.omtfAnalysis = cms.EDAnalyzer("OmtfTreeAnalysis",
     minNumberRpcDtCscHits = cms.uint32(2),
   ),
 
-  filterByAnaMenu = cms.bool(True),
+  filterByAnaMenu = cms.bool(False),
   anaMenu = cms.PSet( #OR of conditions for L1 and separately for HLT
 #   acceptL1_Names  = cms.vstring("any"),
 #   acceptL1_Names  = cms.vstring("L1_IsolatedBunch","L1_FirstBunchInTrain","L1_FirstCollisionInOrbit","L1_FirstCollisionInTrain"),
@@ -97,7 +97,7 @@ process.omtfAnalysis = cms.EDAnalyzer("OmtfTreeAnalysis",
 #   acceptHLT_Names = cms.vstring("HLT_AK8PF","HLT_Jet","HLT_HT","HLT_PFJet","HLT_PFHT"),
   ),
 
-   anaDataEmul =  cms.PSet( bxMin=cms.int32(-3), bxMax=cms.int32(4)),
+   anaDataEmul =  cms.PSet( bxMin=cms.int32(0), bxMax=cms.int32(0)),
    anaEff =  cms.PSet(),     
 #
 # NEXT: to do (?) propagete probe to AnaTime and check prefire for that muon only
