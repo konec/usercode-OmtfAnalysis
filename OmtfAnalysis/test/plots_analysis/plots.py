@@ -1,4 +1,4 @@
-#!/cvmfs/cms.cern.ch/slc7_amd64_gcc12/cms/cmssw/CMSSW_14_0_4/external/slc7_amd64_gcc12/bin/python3
+#!/cvmfs/cms.cern.ch/slc7_amd64_gcc12/cms/cmssw/CMSSW_14_1_0_pre2/external/slc7_amd64_gcc12/bin/python3
 
 import sys
 import math

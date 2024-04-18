@@ -24,7 +24,8 @@ process = cms.Process('OmtfTree')
 #dataDir='/eos/cms/store/express/Run2022E/ExpressPhysics/FEVT/Express-v1/000/359/685/00000/'
 #dataDir='/eos/cms/store/express/Run2022F/ExpressPhysics/FEVT/Express-v1/000/360/459/00000/'
 #dataDir='/eos/cms/store/express/Run2022G/ExpressPhysics/FEVT/Express-v1/000/362/728/00000/'
-dataDir='/eos/cms/store/express/Run2024A/ExpressCosmics/FEVT/Express-v1/000/378/179/00000/'
+#dataDir='/eos/cms/store/express/Run2024A/ExpressCosmics/FEVT/Express-v1/000/378/179/00000/'
+dataDir='/eos/cms/store/express/Run2024B/ExpressPhysics/FEVT/Express-v1/000/379/252/00000/'
 lsCommand='ls -1 '+dataDir+'|grep root'
 #lsCommand='ls -1 '+dataDir+'|grep run362728_Muon'
 #lsCommand='ls -1 '+dataDir+'|grep JetMET | grep 362437 |grep root'
@@ -66,17 +67,17 @@ fileNames = cms.untracked.vstring(
 #'file:/eos/home-k/konec/data/Run2023D-JetMET_JetHTJetPlusHOFilter-PromptReco-v1_RAW-RECO/run_369870_81f7355b-2ac5-4469-ab0a-d9b413c9152b.root',
 # 'root://xrootd-cms.infn.it//store/data/Run2023B/Muon0/RAW-RECO/ZMu-PromptReco-v1/000/367/079/00000/b01b794e-9075-4d42-b273-85b2bc66f13a.root',
 #  'file:/eos/cms/store/express/Run2024A/ExpressPhysics/FEVT/Express-v1/000/378/750/00000/ff8819ea-3cdd-4a3d-85c1-746732185400.root'
- 'file:/eos/cms/store/express/Run2024A/ExpressCosmics/FEVT/Express-v1/000/378/179/00000/efe09b07-fa6c-4950-92af-53778b70ecfe.root',
+# 'file:/eos/cms/store/express/Run2024A/ExpressCosmics/FEVT/Express-v1/000/378/179/00000/efe09b07-fa6c-4950-92af-53778b70ecfe.root',
 # 'file:/eos/cms/store/express/Run2024A/ExpressPhysics/FEVT/Express-v1/000/378/751/00000/6990d217-a954-42ff-ac85-6453d2712b68.root',
 #  'file:/eos/cms/store/express/Run2024A/ExpressPhysics/FEVT/Express-v1/000/378/239/00000/e62167f8-a9e6-4f6a-ae3b-fd6976b985f5.root',
+  files
   ),
 skipEvents =  cms.untracked.uint32(0)
 #skipEvents =  cms.untracked.uint32(19177)
 #skipEvents =  cms.untracked.uint32(19177+1117)
 #skipEvents =  cms.untracked.uint32(19177+1332)
 )
-process.source.fileNames = files
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(25000) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(2500) )
 
 #
 # import of standard configurations
@@ -178,8 +179,8 @@ process.digiCompare = cms.EDAnalyzer("OmtfDigiCompare",
 #)
 
 process.load('L1Trigger.L1TMuonOverlapPhase1.fakeOmtfParams_cff')
-process.omtfParams.configXMLFile =  cms.FileInPath("L1Trigger/L1TMuonOverlapPhase1/omtf_config/hwToLogicLayer_0x0009.xml")
-process.omtfParams.patternsXMLFiles = cms.VPSet( cms.PSet(patternsXMLFile = cms.FileInPath("L1Trigger/L1TMuonOverlapPhase1/omtf_config/Patterns_ExtraplMB1nadMB2SimplifiedFP_t17_classProb17_recalib2_minDP0_v3.xml")))
+process.omtfParams.configXMLFile =  cms.FileInPath("L1Trigger/L1TMuon/data/omtf_config/hwToLogicLayer_0x0009.xml")
+process.omtfParams.patternsXMLFiles = cms.VPSet( cms.PSet(patternsXMLFile = cms.FileInPath("L1Trigger/L1TMuon/data/omtf_config/Patterns_ExtraplMB1nadMB2SimplifiedFP_t17_classProb17_recalib2_minDP0_v3.xml")))
 
 import L1Trigger.L1TMuonOverlapPhase1.simOmtfDigis_cfi
 process.omtfEmulator=L1Trigger.L1TMuonOverlapPhase1.simOmtfDigis_cfi.simOmtfDigis.clone() 
@@ -223,7 +224,7 @@ process.omtfEmulator.useStubQualInExtr = cms.bool(False)
 process.omtfEmulator.useEndcapStubsRInExtr = cms.bool(False)
 process.omtfEmulator.useFloatingPointExtrapolation = cms.bool(False)
 
-process.omtfEmulator.extrapolFactorsFilename = cms.FileInPath("L1Trigger/L1TMuonOverlapPhase1/omtf_config/ExtrapolationFactors_simple.xml")
+process.omtfEmulator.extrapolFactorsFilename = cms.FileInPath("L1Trigger/L1TMuon/data/omtf_config/ExtrapolationFactors_simple.xml")
 process.omtfEmulator.sorterType = cms.string("byLLH")
 process.omtfEmulator.ghostBusterType = cms.string("byRefLayer") # byLLH byRefLayer GhostBusterPreferRefDt
 process.omtfEmulator.goldenPatternResultFinalizeFunction = cms.int32(10)

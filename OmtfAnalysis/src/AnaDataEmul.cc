@@ -19,6 +19,10 @@
 using namespace omtfUtilities;
 
 namespace {
+  bool equalUpt(unsigned int upt1,unsigned int upt2) { return (upt1 & 0b11111)==(upt2 & 0b11111); }
+}
+
+namespace {
   TH1D *hDataEmulCompare; 
   TH1D *hDataEmulIssue;
   TH2D *hDataEmulCompareComb;
@@ -65,6 +69,7 @@ std::string AnaDataEmul::problName(const PROBL & diff) const
     case (wrong_board) : return "wrong_board"; break;
     case (wrong_hits)  : return "wrong_hits"; break;
     case (wrong_kine)  : return "wrong_kine"; break;
+    case (wrong_upt)   : return "wrong_upt"; break;
     default:       return "unknown";
   }
 }
@@ -72,7 +77,7 @@ std::string AnaDataEmul::problName(const PROBL & diff) const
 void AnaDataEmul::init(TObjArray& histos)
 {
   hDataEmulCompare = new TH1D("hDataEmulCompare","hDataEmulCompare",7, 0.5,7.5); histos.Add(hDataEmulCompare);
-  hDataEmulCompare->GetXaxis()->SetBinLabel(1,"Agree");
+  hDataEmulCompare->GetXaxis()->SetBinLabel(1,"AGREE");
   hDataEmulCompare->GetXaxis()->SetBinLabel(2,"Almost Agree");
   hDataEmulCompare->GetXaxis()->SetBinLabel(3,"Rather Agree");
   hDataEmulCompare->GetXaxis()->SetBinLabel(4,"Disagree");
@@ -154,7 +159,7 @@ void AnaDataEmul::init(TObjArray& histos)
   hDataEmulBxD = new TH1D("hDataEmulBxD","hDataEmulBx",10,-4.5,5.5); histos.Add(hDataEmulBxD);
   hDataEmulBxE = new TH1D("hDataEmulBxE","hDataEmulBx",10,-4.5,5.5); histos.Add(hDataEmulBxE);
 
-  hDataEmulCheckProb = new TH2D("hDataEmulCheckProb","hDataEmulCheckProb",8, -3.5,4.5, 5, -0.5, 4.5); histos.Add(hDataEmulCheckProb); 
+  hDataEmulCheckProb = new TH2D("hDataEmulCheckProb","hDataEmulCheckProb",8, -3.5,4.5, 6, -0.5, 5.5); histos.Add(hDataEmulCheckProb); 
   {
     TAxis* y = hDataEmulCheckProb->GetYaxis();
            y->SetBinLabel(y->FindBin(ok),         problName(ok).c_str());
@@ -162,6 +167,7 @@ void AnaDataEmul::init(TObjArray& histos)
            y->SetBinLabel(y->FindBin(wrong_board),problName(wrong_board).c_str());
            y->SetBinLabel(y->FindBin(wrong_hits), problName(wrong_hits).c_str());
            y->SetBinLabel(y->FindBin(wrong_kine), problName(wrong_kine).c_str());
+           y->SetBinLabel(y->FindBin(wrong_upt),  problName(wrong_upt).c_str());
     hDataEmulCheckProb->GetXaxis()->SetNdivisions(110);
   }
 
@@ -209,7 +215,6 @@ void AnaDataEmul::run(EventObj* event, L1ObjColl * coll)
     L1ObjColl dataColl = coll->selectByType(L1Obj::OMTF).selectByBx(bx,bx);
     L1ObjColl emulColl = coll->selectByType(L1Obj::OMTF_emu).selectByBx(bx,bx);
     std::vector<L1Obj> vdata = dataColl;
-    
     // check problems
     if (dataColl.getL1Objs().size() || emulColl.getL1Objs().size()) {
       if (dataColl.getL1Objs().size() != emulColl.getL1Objs().size()) {
@@ -281,10 +286,10 @@ void AnaDataEmul::run(EventObj* event, L1ObjColl * coll)
     
 //      if(layerComb==6) {
 //        if (debug && diff==agree ) std::cout << "HERE agree("<<matchName(diff)<<"), dt: "<< dt <<", csc: "<< csc <<", rpcB: "<< hasRpcHitsB(hits)<<", rpcE: "<<hasRpcHitsE(hits) << std::endl <<*coll << std::endl; 
-        if (debug && diff!=agree ) std::cout << "NOT agree("<<matchName(diff)<<"), dt: "<< dt <<", csc: "<< csc <<", rpcB: "<< hasRpcHitsB(hits)<<", rpcE: "<<hasRpcHitsE(hits) << std::endl <<*coll << std::endl; 
+//        if (debug && diff!=agree ) std::cout << "NOT agree("<<matchName(diff)<<"), dt: "<< dt <<", csc: "<< csc <<", rpcB: "<< hasRpcHitsB(hits)<<", rpcE: "<<hasRpcHitsE(hits) << std::endl <<*coll << std::endl; 
 //}
     
-      if (unique) {
+      if (unique && bx==0) {
         hDataEmulPt->Fill( code2pt(data->pt), code2pt(emul->pt) );
         hDataEmulPtUncstr->Fill( code2pt(data->upt), code2pt(emul->upt) );
         hDataEmulPhi->Fill(data->phi, emul->phi);
@@ -296,8 +301,8 @@ void AnaDataEmul::run(EventObj* event, L1ObjColl * coll)
         if ( data->charge !=  emul->charge)    hDataEmulIssue->Fill(6);
 //      if ( (data->q >>2) != (emul->q >>2) )  hDataEmulIssue->Fill(7);
         if ( (data->q    ) != (emul->q    ) )  hDataEmulIssue->Fill(7);
-        if ( (data->upt & 0b11111 ) != (emul->upt & 0b11111) )     hDataEmulIssue->Fill(8);
-//        if ( (data->q    ) != (emul->q    ) ) std::cout << *event << "   QQ: "<< data->q<<emul->q << std::endl;
+        if ( !equalUpt(data->upt,emul->upt) )  hDataEmulIssue->Fill(8);
+//      if ( (data->upt & 0b11111 ) != (emul->upt & 0b11111) )     hDataEmulIssue->Fill(8);
       }
       if(unique) { hDataEmulEta->Fill(code2HistoBin(abs(data->eta)), code2HistoBin(abs(emul->eta)) ); }
     
@@ -316,6 +321,7 @@ AnaDataEmul::PROBL AnaDataEmul::checkProbl(const L1Obj & data, const L1Obj & emu
   if (data.pt  != emul.pt ) return wrong_kine;
   if (data.phi != emul.phi) return wrong_kine;
   if (data.eta != emul.eta) return wrong_kine;
+  if (!equalUpt(data.upt, emul.upt) ) return wrong_upt;
   return ok;
 }
 
@@ -338,6 +344,7 @@ AnaDataEmul::MATCH AnaDataEmul::checkMatch(const L1Obj * data, const L1Obj * emu
          && (data->eta == emul->eta) 
          && (data->q   == emul->q  ) 
          && (data->charge == emul->charge)
+         && (equalUpt(data->upt,emul->upt))
        ) diff = agree; 
     else if (    abs(data->pt-emul->pt) <= 2 
               && abs(data->phi - emul->phi) <= 1 

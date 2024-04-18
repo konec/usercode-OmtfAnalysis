@@ -1,17 +1,21 @@
 from WMCore.Configuration import Configuration
 
-setEra='Run2023C'
+setEra='Run2024B'
 #setType='Muon'
-setType='JetMET'
-setId='1'
+#setType='JetMET'
+setType='ExpressPhysics'
+setId=''
 jobVer='3'
-json='Cert_Collisions2023_eraC_367095_368823_Golden.json'
+#json='Cert_Collisions2023_eraC_367095_368823_Golden.json'
 #json='Cert_Collisions2023_eraB_366403_367079_Golden.json'
+json='JSON.txt'
 
 if setType == 'Muon' :
   inputDataSet='ZMu-PromptReco-v1/RAW-RECO'
 elif setType == 'JetMET' :
   inputDataSet='JetHTJetPlusHOFilter-PromptReco-v1/RAW-RECO'
+elif setType == 'ExpressPhysics' :
+  inputDataSet = 'Express-v1/FEVT'
 else:
   inputDataSet='FIXME'
 
@@ -27,20 +31,20 @@ config.General.transferOutputs = True
 
 config.section_("Data")
 config.Data.inputDataset = '/'+setType+setId+'/'+setEra+'-'+inputDataSet
-config.Data.lumiMask=json
+#config.Data.lumiMask=json
 #config.Data.lumiMask='Cert_Collisions2022_eraG_362433_362760_Golden.json'
 #config.Data.lumiMask='Cert_Collisions2022_eraD_357538_357900_Golden.json'
 #config.Data.lumiMask='Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt'
 #config.Data.lumiMask='Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON.txt'
 
 #config.Data.runRange = '362719-362760'
-#config.Data.runRange = '295606'
+config.Data.runRange = '379252'
 
 config.Data.useParent = False 
 config.Data.inputDBS = 'global'
 config.Data.splitting = 'LumiBased'
 #config.Data.splitting = 'Automatic'
-config.Data.unitsPerJob = 100 #number of files per jobs
+config.Data.unitsPerJob = 20 #number of files per jobs
 config.Data.totalUnits =  -1 #number of event
 config.Data.outLFNDirBase = '/store/user/konec/crabout/'
 config.Data.publication = False 

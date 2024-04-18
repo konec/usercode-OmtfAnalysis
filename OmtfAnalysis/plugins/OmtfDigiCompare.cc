@@ -450,8 +450,9 @@ void OmtfDigiCompare::analyzeOMTF( const edm::Event &ev, const edm::EventSetup& 
   std::vector<MyDigi> myData;
   for (l1t::RegionalMuonCandBxCollection::const_iterator it = digiCollectionOMTF_DATA.product()->begin(bxNumber);
        it != digiCollectionOMTF_DATA.product()->end(bxNumber); ++it) {
-    MyDigi myDigi = { (unsigned int)it->processor(),  (int)it->hwPhi()+(int)it->hwEta()+(int)it->hwPt(), bxNumber};
-    //MyDigi myDigi = { (unsigned int)it->processor(),  it->hwPt(), bxNumber};
+    
+    MyDigi myDigi = { (unsigned int)it->processor(),  (int)it->hwPhi()+(int)it->hwEta()+(int)it->hwPt()+(int)it->trackSubAddress(l1t::RegionalMuonCand::kWeight), bxNumber};
+//  MyDigi myDigi = { (unsigned int)it->processor(),  it->hwPt(), bxNumber};
     if (debug) std::cout <<"PT: "<<it->hwPt()<<" ETA: "<<it->hwEta()<<" PHI: "<<it->hwPhi()<<" link: "<<it->link() << std::endl;
     if (debug) std::cout <<" MyDigi (DATA): " << myDigi << std::endl;
     if (myData.end() == std::find(myData.begin(), myData.end(), myDigi)) myData.push_back(myDigi);
@@ -466,8 +467,8 @@ void OmtfDigiCompare::analyzeOMTF( const edm::Event &ev, const edm::EventSetup& 
   std::vector<MyDigi> myEmul;
   for (l1t::RegionalMuonCandBxCollection::const_iterator it = digiCollectionOMTF_EMUL.product()->begin(bxNumber);
        it != digiCollectionOMTF_EMUL.product()->end(bxNumber); ++it) {
-    MyDigi myDigi = { (unsigned int)it->processor(),  (int)it->hwPhi()+(int)it->hwEta()+(int)it->hwPt(), bxNumber};
-    //MyDigi myDigi = { (unsigned int)it->processor(),  it->hwPt(), bxNumber};
+    MyDigi myDigi = { (unsigned int)it->processor(),  (int)it->hwPhi()+(int)it->hwEta()+(int)it->hwPt()+(int)it->trackSubAddress(l1t::RegionalMuonCand::kWeight), bxNumber};
+//    MyDigi myDigi = { (unsigned int)it->processor(),  it->hwPt(), bxNumber};
     if (debug) std::cout <<"PT: "<<it->hwPt()<<" ETA: "<<it->hwEta()<<" PHI: "<<it->hwPhi()<<" link: "<<it->link() << std::endl;
     if (debug) std::cout <<" MyDigi (EMUL): " << myDigi << std::endl;
     if (myEmul.end() == std::find(myEmul.begin(), myEmul.end(), myDigi)) myEmul.push_back(myDigi);

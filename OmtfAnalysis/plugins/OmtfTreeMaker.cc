@@ -204,7 +204,7 @@ if (debug) std::cout << " pt_sim: " << pt_sim <<" eta_sim: "<<eta_sim<<" phi_sim
 */
 
 //
-bool debug=1;
+bool debug=0;
   if (debug) { // || l1ObjColl->selectByType(L1Obj::OMTF_emu)) {
     std::cout<<"#"<<theCounter<<" "<< *event; // << std::endl;
     std::cout << *muonColl << std::endl;

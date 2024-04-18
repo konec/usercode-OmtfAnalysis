@@ -20,7 +20,8 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run3_data', '')
 process.omtfAnalysis = cms.EDAnalyzer("OmtfTreeAnalysis",
   histoFileName = cms.string("omtfAnalysis.root"),
   treeFileNames = cms.vstring(
-        "omtfTree.root"
+#       "omtfTree.root"
+   "../jobs/Run2024B_ExpressPhysics/crab_ExpressPhysics_jobVer3/omtfTree.root",
 #  "../jobs/Run2023B_JetMET/crab_JetMET0_jobVer3/omtfTree.root",
 #  "../jobs/Run2023B_JetMET/crab_JetMET1_jobVer3/omtfTree.root",
 #  "../jobs/Run2023C_JetMET/crab_JetMET0_jobVer3/omtfTree.root",
@@ -97,7 +98,7 @@ process.omtfAnalysis = cms.EDAnalyzer("OmtfTreeAnalysis",
 #   acceptHLT_Names = cms.vstring("HLT_AK8PF","HLT_Jet","HLT_HT","HLT_PFJet","HLT_PFHT"),
   ),
 
-   anaDataEmul =  cms.PSet( bxMin=cms.int32(0), bxMax=cms.int32(0)),
+   anaDataEmul =  cms.PSet( bxMin=cms.int32(-3), bxMax=cms.int32(4)),
    anaEff =  cms.PSet(),     
 #
 # NEXT: to do (?) propagete probe to AnaTime and check prefire for that muon only

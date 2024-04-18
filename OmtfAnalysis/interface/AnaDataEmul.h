@@ -23,7 +23,7 @@ private:
   int bxMin, bxMax;
 
   enum MATCH { agree=1, almostAgree=2, ratherAgree = 3, disagree=4, dataOnly=5, emulOnly=6, sizeDiff=7, unknown };
-  enum PROBL { ok=0, wrong_size=1,  wrong_board=2, wrong_hits=3,  wrong_kine=4, wrong };
+  enum PROBL { ok=0, wrong_size=1,  wrong_board=2, wrong_hits=3,  wrong_upt=4, wrong_kine=5, wrong };
   std::string matchName(const MATCH & ) const;
   std::string problName(const PROBL& ) const;
   MATCH  checkMatch( const L1Obj * data, const L1Obj * emul);
