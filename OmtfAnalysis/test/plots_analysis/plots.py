@@ -23,7 +23,7 @@ gROOT.Reset()
 f = TFile(fileName);
 f.ls();
 
-#--------- HERE plots
+#---------- HERE plots
 
 canvas = TObjArray()
 #plotsEvent.plotAll(canvas)
