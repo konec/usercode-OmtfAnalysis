@@ -5,7 +5,7 @@ setEra='Run2024C'
 #setType='JetMET'
 setType='ExpressPhysics'
 setId=''
-jobVer='2'
+jobVer='3'
 #json='Cert_Collisions2023_eraC_367095_368823_Golden.json'
 #json='Cert_Collisions2023_eraB_366403_367079_Golden.json'
 #json='JSON.txt'
@@ -39,7 +39,8 @@ config.Data.inputDataset = '/'+setType+setId+'/'+setEra+'-'+inputDataSet
 
 #config.Data.runRange = '362719-362760'
 #config.Data.runRange = '379530'
-config.Data.runRange = '379774'
+#config.Data.runRange = '379774'
+config.Data.runRange = '379866'
 
 config.Data.useParent = False 
 config.Data.inputDBS = 'global'
