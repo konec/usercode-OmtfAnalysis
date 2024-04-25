@@ -128,13 +128,15 @@ bool L1ObjMaker::makeRegCandidates(const edm::Event &iEvent,  L1Obj::TYPE type, 
     obj.charge = it->hwSign();   // charge=  pow(-1,hwSign)
     obj.upt =  it->hwPtUnconstrained();
     obj.dxy = it->hwDXY();
-
-    std::map<int, int> hwAddrMap = it->trackAddress();
     obj.q   = it->hwQual();
-    obj.hits   = hwAddrMap[0];
     obj.bx = bxNumber;
-    obj.disc = hwAddrMap[2];
-    if (type==L1Obj::OMTF) { obj.upt = obj.disc; obj.disc=0;} 
+
+    if (type==L1Obj::OMTF || type==L1Obj::OMTF_emu) {
+      std::map<int, int> hwAddrMap = it->trackAddress();
+      obj.hits   = hwAddrMap[0];
+//    obj.disc = hwAddrMap[2];
+      obj.disc = 0;
+    }
     result.push_back(obj);
   }
   }

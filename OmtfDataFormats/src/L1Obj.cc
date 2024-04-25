@@ -4,7 +4,7 @@
 #include <iomanip>
 
 
-L1Obj::L1Obj() : pt(0),eta(0),phi(0),
+L1Obj::L1Obj() : pt(0),eta(0),phi(0), upt(0),dxy(0),
                  disc(0), 
                  bx(0),q(0), hits(0), charge(0), refLayer(0), 
                  type(NONE), 

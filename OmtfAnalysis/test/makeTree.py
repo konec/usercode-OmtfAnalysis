@@ -17,18 +17,10 @@ process = cms.Process('OmtfTree')
 
 #dataDir='/afs/cern.ch/work/k/konec/data/runs/'
 #dataDir='/eos/home-k/konec/data/Run2023D-JetMET_JetHTJetPlusHOFilter-PromptReco-v1_RAW-RECO/'
-#dataDir='/eos/home-k/konec/data/Run2023D-Muon_ZMu-PromptReco-v1_RAW-RECO/'
-#dataDir='/eos/cms/store/express/Run2022D/ExpressPhysics/FEVT/Express-v1/000/357/815/00000/'
-#dataDir='/eos/cms/store/express/Run2022E/ExpressPhysics/FEVT/Express-v1/000/359/691/00000/'
-#dataDir='/eos/cms/store/express/Run2022E/ExpressPhysics/FEVT/Express-v1/000/359/686/00000/'
-#dataDir='/eos/cms/store/express/Run2022E/ExpressPhysics/FEVT/Express-v1/000/359/685/00000/'
-#dataDir='/eos/cms/store/express/Run2022F/ExpressPhysics/FEVT/Express-v1/000/360/459/00000/'
-#dataDir='/eos/cms/store/express/Run2022G/ExpressPhysics/FEVT/Express-v1/000/362/728/00000/'
 #dataDir='/eos/cms/store/express/Run2024A/ExpressCosmics/FEVT/Express-v1/000/378/179/00000/'
-dataDir='/eos/cms/store/express/Run2024B/ExpressPhysics/FEVT/Express-v1/000/379/252/00000/'
+#dataDir='/eos/cms/store/express/Run2024B/ExpressPhysics/FEVT/Express-v1/000/379/252/00000/'
+dataDir='/eos/cms/store/express/Run2024C/ExpressPhysics/FEVT/Express-v1/000/379/530/00000/'
 lsCommand='ls -1 '+dataDir+'|grep root'
-#lsCommand='ls -1 '+dataDir+'|grep run362728_Muon'
-#lsCommand='ls -1 '+dataDir+'|grep JetMET | grep 362437 |grep root'
 
 print ('command: ',lsCommand)
 lsOutput= subprocess.Popen(lsCommand, stdout=subprocess.PIPE, shell=True, text=True).communicate()[0]
@@ -40,29 +32,23 @@ print ("Number of files in direcotry:",dataDir," ---> ", len(files))
 process.source = cms.Source("PoolSource", 
 fileNames = cms.untracked.vstring(
 #'file:/afs/cern.ch/work/k/konec/data/runs/run279931-Express-2000_82DB28E0-7171-E611-A67B-FA163EE0E3A6.root',
-#'root://cms-xrd-global.cern.ch//store/express/Run2017B/ExpressPhysics/FEVT/Express-v2/000/298/853/00000/08861D5E-C966-E711-9E99-02163E019DA2.root'
 #'/store/data/Run2017F/SingleMuon/RAW-RECO/ZMu-17Nov2017-v1/70002/BEB00326-8EE0-E711-BCEE-FA163E8B70D3.root',
 #'root://eoscms.cern.ch//eos/cms/store/data/Run2018D/SingleMuon/RAW-RECO/ZMu-PromptReco-v2/000/321/887/00000/6C133D73-73AE-E811-8244-FA163E6C4BEA.root'
-# 'file:/eos/cms/store/express/Commissioning2022/ExpressCosmics/FEVT/Express-v1/000/351/470/00000/ff2a2110-2a06-4a7f-8e51-6977113e6e68.root',
-# 'file:/eos/cms/store/express/Run2022A/ExpressPhysics/FEVT/Express-v1/000/352/417/00000/01946fa6-080a-42e1-af66-b40b0621e8e5.root',
-# 'file:/eos/cms/store/express/Run2022A/ExpressPhysics/FEVT/Express-v1/000/352/417/00000/06079f98-e0ed-4810-9490-1f7d0d5a17bb.root',
-# 'file:/eos/cms/store/express/Run2022A/ExpressPhysics/FEVT/Express-v1/000/352/417/00000/069157b0-dbaa-4546-bdac-072a85fee2ff.root',
-#  'file:/eos/cms/store/express/Run2022A/ExpressPhysics/FEVT/Express-v1/000/352/417/00000/0773fa06-e0e6-4da3-a12f-7f02e809a2ef.root',
-# 'file:/afs/cern.ch/work/k/konec/data/runs/run324201_SingleMuon_DE15789B-9E54-7F41-8C6B-E2442CB23F52.root',
-#  'file:/afs/cern.ch/work/k/konec/data/runs/run321124_JetHT_9E9321CC-B19E-E811-BF42-FA163E4EAC94.root',
-#  'file:/afs/cern.ch/work/k/konec/data/runs/run321140_JetHT_00CAF0AF-5B9F-E811-9E6B-FA163EEA3181.root',
-#  'file:/afs/cern.ch/work/k/konec/data/runs/run322348_JetHT_A8C88C19-40B4-E811-9F14-02163E019EAF.root',
-# 'file:/eos/cms/store/express/Run2022D/ExpressPhysics/FEVT/Express-v1/000/357/815/00000/ffe8b95d-25cb-45cd-9f45-b96d8e18ed4f.root',
-# '/store/data/Run2022G/Muon/RAW-RECO/ZMu-PromptReco-v1/000/362/728/00000/02c66efb-5541-4c9d-b2ac-952ce4ebdcd7.root',
-#  'file:/afs/cern.ch/work/k/konec/data/runs/run362728_Muon_02c66efb-5541-4c9d-b2ac-952ce4ebdcd7.root',
-#  '/store/data/Run2022G/JetMET/RAW-RECO/JetHTJetPlusHOFilter-PromptReco-v1/000/362/437/00000/7fa78eec-f7bf-47be-bbce-9264b8d5205e.root',
-#  '/store/data/Run2022G/JetMET/RAW-RECO/JetHTJetPlusHOFilter-PromptReco-v1/000/362/437/00000/cc10cdfb-6a8c-455d-a441-960522112238.root',
-#   '/store/data/Run2022G/Muon/MINIAOD/PromptReco-v1/000/362/760/00000/01cd8e14-f3a9-412e-8548-3f17ea13040b.root',
-#  '/store/data/Run2022G/JetMET/MINIAOD/PromptReco-v1/000/362/760/00000/110404fa-abee-41ad-9ff3-25756fa54d58.root',
-# '/store/data/Run2023D/Muon0/RAW-RECO/ZMu-PromptReco-v1/000/369/870/00000/42f402f5-c1ce-433f-8d92-7af6cb2004d5.root',
-# '/store/data/Run2023D/Muon0/RAW-RECO/ZMu-PromptReco-v1/000/369/956/00000/50d95203-d831-4a5f-8e47-f9147cfc0e7f.root',
-# '/store/data/Run2023D/Muon0/RAW-RECO/ZMu-PromptReco-v1/000/369/956/00000/545cafa8-7c69-40c1-a355-6dffd539c0b6.root',
-# '/store/data/Run2023D/Muon0/RAW-RECO/ZMu-PromptReco-v1/000/369/956/00000/548d4944-261b-499a-a9c7-8bdaf7991348.root',
+#'file:/afs/cern.ch/work/k/konec/data/runs/run324201_SingleMuon_DE15789B-9E54-7F41-8C6B-E2442CB23F52.root',
+#'file:/afs/cern.ch/work/k/konec/data/runs/run321124_JetHT_9E9321CC-B19E-E811-BF42-FA163E4EAC94.root',
+#'file:/afs/cern.ch/work/k/konec/data/runs/run321140_JetHT_00CAF0AF-5B9F-E811-9E6B-FA163EEA3181.root',
+#'file:/afs/cern.ch/work/k/konec/data/runs/run322348_JetHT_A8C88C19-40B4-E811-9F14-02163E019EAF.root',
+#'file:/eos/cms/store/express/Run2022D/ExpressPhysics/FEVT/Express-v1/000/357/815/00000/ffe8b95d-25cb-45cd-9f45-b96d8e18ed4f.root',
+#'/store/data/Run2022G/Muon/RAW-RECO/ZMu-PromptReco-v1/000/362/728/00000/02c66efb-5541-4c9d-b2ac-952ce4ebdcd7.root',
+#'file:/afs/cern.ch/work/k/konec/data/runs/run362728_Muon_02c66efb-5541-4c9d-b2ac-952ce4ebdcd7.root',
+#'/store/data/Run2022G/JetMET/RAW-RECO/JetHTJetPlusHOFilter-PromptReco-v1/000/362/437/00000/7fa78eec-f7bf-47be-bbce-9264b8d5205e.root',
+#'/store/data/Run2022G/JetMET/RAW-RECO/JetHTJetPlusHOFilter-PromptReco-v1/000/362/437/00000/cc10cdfb-6a8c-455d-a441-960522112238.root',
+#'/store/data/Run2022G/Muon/MINIAOD/PromptReco-v1/000/362/760/00000/01cd8e14-f3a9-412e-8548-3f17ea13040b.root',
+#'/store/data/Run2022G/JetMET/MINIAOD/PromptReco-v1/000/362/760/00000/110404fa-abee-41ad-9ff3-25756fa54d58.root',
+#'/store/data/Run2023D/Muon0/RAW-RECO/ZMu-PromptReco-v1/000/369/870/00000/42f402f5-c1ce-433f-8d92-7af6cb2004d5.root',
+#'/store/data/Run2023D/Muon0/RAW-RECO/ZMu-PromptReco-v1/000/369/956/00000/50d95203-d831-4a5f-8e47-f9147cfc0e7f.root',
+#'/store/data/Run2023D/Muon0/RAW-RECO/ZMu-PromptReco-v1/000/369/956/00000/545cafa8-7c69-40c1-a355-6dffd539c0b6.root',
+#'/store/data/Run2023D/Muon0/RAW-RECO/ZMu-PromptReco-v1/000/369/956/00000/548d4944-261b-499a-a9c7-8bdaf7991348.root',
 #'file:/eos/home-k/konec/data/Run2023D-Muon_ZMu-PromptReco-v1_RAW-RECO/run_369956_5cf85633-fce3-48cc-962e-8bce11540a67.root',
 #'file:/eos/home-k/konec/data/Run2023D-JetMET_JetHTJetPlusHOFilter-PromptReco-v1_RAW-RECO/run_369870_81f7355b-2ac5-4469-ab0a-d9b413c9152b.root',
 # 'root://xrootd-cms.infn.it//store/data/Run2023B/Muon0/RAW-RECO/ZMu-PromptReco-v1/000/367/079/00000/b01b794e-9075-4d42-b273-85b2bc66f13a.root',
@@ -77,7 +63,7 @@ skipEvents =  cms.untracked.uint32(0)
 #skipEvents =  cms.untracked.uint32(19177+1117)
 #skipEvents =  cms.untracked.uint32(19177+1332)
 )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(2500) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10000) )
 
 #
 # import of standard configurations
@@ -109,14 +95,14 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_data', '')
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run3_data', '')
-process.GlobalTag.globaltag = '140X_dataRun3_Express_v2'
+process.GlobalTag.globaltag = '140X_dataRun3_Express_v3'
 
 #
 # message logger
 #
 process.load('FWCore.MessageService.MessageLogger_cfi')
 
-process.MessageLogger.cerr.FwkReport.reportEvery = 1
+process.MessageLogger.cerr.FwkReport.reportEvery = 500
 process.MessageLogger.cerr.enableStatistics = False
 process.MessageLogger.cout.enable = False 
 process.MessageLogger.cerr.threshold = "DEBUG"
@@ -125,6 +111,7 @@ process.MessageLogger.debugModules.append('esProd')
 process.MessageLogger.debugModules.append('L1TMuonOverlapPhase1ParamsESProducer')
 process.MessageLogger.debugModules.append('omtfParamsSource')
 process.MessageLogger.debugModules.append('omtfParams')
+#process.MessageLogger.debugModules.append('omtfStage2Digis')
 #process.MessageLogger.debugModules.append('omtfEmulator')
 #process.MessageLogger.debugModules.append('muonRPCDigis')
 process.MessageLogger.suppressWarning  = cms.untracked.vstring('*')
@@ -142,7 +129,7 @@ process.digiCompare = cms.EDAnalyzer("OmtfDigiCompare",
 
   srcOMTF_DATA = cms.InputTag('omtfStage2Digis'),
   srcOMTF_EMUL = cms.InputTag('gmtStage2Digis','OMTF'),
-#  srcOMTF_EMUL = cms.InputTag('simOmtfDigis','OMTF'),
+#  srcOMTF_EMUL = cms.InputTag('omtfEmulator','OMTF'),
 
   srcDTPh_BMTF = cms.InputTag('twinMuxStage2Digis','PhIn'),
   srcDTTh_BMTF = cms.InputTag('twinMuxStage2Digis','ThIn'),

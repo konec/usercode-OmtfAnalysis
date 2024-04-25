@@ -1,14 +1,14 @@
 from WMCore.Configuration import Configuration
 
-setEra='Run2024B'
+setEra='Run2024C'
 #setType='Muon'
 #setType='JetMET'
 setType='ExpressPhysics'
 setId=''
-jobVer='3'
+jobVer='2'
 #json='Cert_Collisions2023_eraC_367095_368823_Golden.json'
 #json='Cert_Collisions2023_eraB_366403_367079_Golden.json'
-json='JSON.txt'
+#json='JSON.txt'
 
 if setType == 'Muon' :
   inputDataSet='ZMu-PromptReco-v1/RAW-RECO'
@@ -38,7 +38,8 @@ config.Data.inputDataset = '/'+setType+setId+'/'+setEra+'-'+inputDataSet
 #config.Data.lumiMask='Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON.txt'
 
 #config.Data.runRange = '362719-362760'
-config.Data.runRange = '379252'
+#config.Data.runRange = '379530'
+config.Data.runRange = '379774'
 
 config.Data.useParent = False 
 config.Data.inputDBS = 'global'

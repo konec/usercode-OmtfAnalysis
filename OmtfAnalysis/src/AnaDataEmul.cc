@@ -37,8 +37,8 @@ namespace {
   double ptBins[]={ 0., 0.1, 
                    1.5, 2., 2.5, 3., 3.5, 4., 4.5, 5., 6., 7., 8., 
                    10., 12., 14., 16., 18., 20., 25., 30., 35., 40., 45., 
-                   50., 60., 70., 80., 90., 100., 120., 140., 
-                   160};
+                   50., 60., 70., 80., 90., 100., 120., 150., 
+                   201.};
 
 }
 
@@ -214,7 +214,7 @@ void AnaDataEmul::run(EventObj* event, L1ObjColl * coll)
 
     L1ObjColl dataColl = coll->selectByType(L1Obj::OMTF).selectByBx(bx,bx);
     L1ObjColl emulColl = coll->selectByType(L1Obj::OMTF_emu).selectByBx(bx,bx);
-    std::vector<L1Obj> vdata = dataColl;
+
     // check problems
     if (dataColl.getL1Objs().size() || emulColl.getL1Objs().size()) {
       if (dataColl.getL1Objs().size() != emulColl.getL1Objs().size()) {
@@ -233,12 +233,17 @@ void AnaDataEmul::run(EventObj* event, L1ObjColl * coll)
       }
     }
 
-    unsigned int idx=0;
-    do { 
-      const L1Obj * data = (vdata.size() > 0) ?  &(vdata[idx]) : 0;
+    for (const L1Obj & l1obj : dataColl.getL1Objs()) {
+    //do { 
+    //  const L1Obj * data = (vdata.size() > 0) ?  &(vdata[idx]) : 0;
+      const L1Obj * data = &l1obj;
       const L1Obj * emul = bestMatch(data, emulColl);
     
       if (!data && !emul) break;
+//      std::cout <<" DATA: "<<*data<<std::endl;
+//      std::cout <<" EMUL: "<<*emul<<std::endl;
+
+
 
     //  if (emul && ((emul->q & 0b01) !=0) ) return;
     //  if (emul && makeName(*emul).name()=="OMTFn4") return;  
@@ -254,7 +259,7 @@ void AnaDataEmul::run(EventObj* event, L1ObjColl * coll)
     //  if (emul && (emul->q == 4) ) lowQuality = true; 
     
       MATCH diff = checkMatch(data, emul);   
-      if (data && emul && (vdata.size() != emulColl.getL1Objs().size()) ) diff = sizeDiff;
+      if (data && emul && (dataColl.getL1Objs().size() != emulColl.getL1Objs().size()) ) diff = sizeDiff;
 
       hDataEmulCompare->Fill(diff);
       theRunMap.addEvent(event->run, (diff==agree) ); 
@@ -276,9 +281,10 @@ void AnaDataEmul::run(EventObj* event, L1ObjColl * coll)
       if (!dt &&  csc && !rpc) layerComb = 6;
       if (!dt && !csc &&  rpc) layerComb = 7;
       hDataEmulCompareComb->Fill(diff, layerComb); 
-      if (diff !=agree && layerComb==5) std::cout <<" EVENT: " << *event << std::endl<<*emul<<std::endl<<*data<<std::endl;
+    //  if (diff !=agree && layerComb==5) std::cout <<" EVENT: " << *event << std::endl<<*emul<<std::endl<<*data<<std::endl;
 
-      bool unique = data && emul && (vdata.size() == 1) && (emulColl.getL1Objs().size() == 1) && (makeName(*data)==makeName(*emul));
+      bool unique = data && emul && (dataColl.getL1Objs().size() == 1) && (emulColl.getL1Objs().size() == 1) && (makeName(*data)==makeName(*emul));
+//      if (unique) std::cout << " HERE UNIQUE" <<std::endl;
       if(unique && !(diff==agree) ) {
          hDataEmulNotAgreeEta->Fill( OmtfName(emul->iProcessor, emul->position), code2HistoBin(abs(emul->eta)) ); 
          hDataEmulNotAgreePhi->Fill( OmtfName(emul->iProcessor, emul->position), emul->phi ); 
@@ -291,7 +297,7 @@ void AnaDataEmul::run(EventObj* event, L1ObjColl * coll)
     
       if (unique && bx==0) {
         hDataEmulPt->Fill( code2pt(data->pt), code2pt(emul->pt) );
-        hDataEmulPtUncstr->Fill( code2pt(data->upt), code2pt(emul->upt) );
+        hDataEmulPtUncstr->Fill( code2upt(data->upt), code2upt(emul->upt) );
         hDataEmulPhi->Fill(data->phi, emul->phi);
         hDataEmulIssue->Fill(1);
         if (data->hits != emul->hits)          hDataEmulIssue->Fill(2);
@@ -299,14 +305,13 @@ void AnaDataEmul::run(EventObj* event, L1ObjColl * coll)
         if ( abs(data->phi - emul->phi) !=0)   hDataEmulIssue->Fill(4); 
         if (data->eta != emul->eta)            hDataEmulIssue->Fill(5);
         if ( data->charge !=  emul->charge)    hDataEmulIssue->Fill(6);
-//      if ( (data->q >>2) != (emul->q >>2) )  hDataEmulIssue->Fill(7);
         if ( (data->q    ) != (emul->q    ) )  hDataEmulIssue->Fill(7);
         if ( !equalUpt(data->upt,emul->upt) )  hDataEmulIssue->Fill(8);
 //      if ( (data->upt & 0b11111 ) != (emul->upt & 0b11111) )     hDataEmulIssue->Fill(8);
       }
       if(unique) { hDataEmulEta->Fill(code2HistoBin(abs(data->eta)), code2HistoBin(abs(emul->eta)) ); }
-    
-    } while ( ++idx < vdata.size() );
+    }
+//} while ( ++idx < vdata.size() );
   }
 }
 

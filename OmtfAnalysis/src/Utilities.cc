@@ -11,7 +11,8 @@ OmtfName omtfUtilities::makeName(const L1Obj & obj)
              OmtfName(obj.iProcessor, obj.position) : OmtfName(); 
 }
 
-double omtfUtilities::code2pt(int pt) { return std::fmin( double(pt-1)/2., 159); }
+double omtfUtilities::code2pt(int ptCode)  { return std::fmin( double(ptCode-1)/2., 200.); }
+double omtfUtilities::code2upt(int uptCode) { return std::fmin( double(uptCode-1.), 200.); }
 
 const int  omtfUtilities::etaBinVal[nEtaBins] = {73, 75, 78, 79, 85, 90, 92, 94, 95, 99, 103, 110, 115, 121};
 

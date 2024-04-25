@@ -15,7 +15,8 @@ namespace omtfUtilities {
   const int nEtaBins = 14;
   extern const int  etaBinVal[nEtaBins]; // = {73, 75, 78, 79, 85, 90, 92, 94, 95, 99, 103, 110, 115, 121};
 
-  double code2pt(int pt);
+  double code2pt(int hwPt);
+  double code2upt(int hwUpt);
 
   template <typename T> int sgn(T val) { return (T(0) < val) - (val < T(0)); } 
 

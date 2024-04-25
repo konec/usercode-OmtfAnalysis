@@ -41,8 +41,8 @@ def cDataEmulPtUncstr(canvas):
   canvas.Add(c)
   h = gROOT.FindObject('hDataEmulPtUncstr')
   h.SetStats(0)
-  h.GetXaxis().SetRange(3,32)
-  h.GetYaxis().SetRange(3,32)
+  h.GetXaxis().SetRange(5,32)
+  h.GetYaxis().SetRange(5,32)
   h.GetXaxis().SetTitleOffset(1.4)
   h.GetYaxis().SetTitleOffset(1.4)
   h.SetXTitle("data p_{T} uncstr [GeV]");
@@ -51,7 +51,7 @@ def cDataEmulPtUncstr(canvas):
   c.SetLogx() 
   c.SetLogy() 
   h.DrawCopy('colo text')
-  xpos=0.60
+  xpos=0.65
   ypos=0.86
   legendFontSize = 0.030
   t=TLatex()

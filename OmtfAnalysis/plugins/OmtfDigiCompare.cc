@@ -108,12 +108,7 @@ public:
   virtual void analyze(const edm::Event &ev, const edm::EventSetup& es) {
     theEventCnt++;
     debug = 0;
-/*
-    if (    ev.id().event() != 483248 
-        &&  ev.id().event() != 480262
-        &&  ev.id().event() != 471470
-        &&  ev.id().event() != 472951 ) return; 
-*/
+// if (    ev.id().event() != 483248 &&  ev.id().event() != 472951 ) return; 
     analyzeDT(ev,es);
     analyzeCSC(ev,es);
     analyzeRPC(ev,es);
@@ -121,6 +116,7 @@ public:
 
     if (theEventCnt%100==1) printStat(); 
   }
+
   void analyzeCSC(const edm::Event&, const edm::EventSetup& es);
   void analyzeDT(const edm::Event&, const edm::EventSetup& es);
   void analyzeRPC(const edm::Event&, const edm::EventSetup& es);
@@ -433,72 +429,6 @@ void OmtfDigiCompare::analyzeDT( const edm::Event &ev, const edm::EventSetup& es
   
 }
 
-void OmtfDigiCompare::analyzeOMTF( const edm::Event &ev, const edm::EventSetup& es) {
-  if (debug) std::cout << "-------- HERE DIGI COMPARE OMTF---------" << std::endl;
-  int bxNumber = 0;
-
-  edm::Handle<l1t::RegionalMuonCandBxCollection> digiCollectionOMTF_DATA;
-  ev.getByToken(inputOMTF_DATA,digiCollectionOMTF_DATA);
-  if (debug) std::cout <<" OMTF digis from DATA" << std::endl;
-//  std::cout <<" size of OMTF digis from DATA: "; for (int i=-3; i<=4; i++) std::cout << digiCollectionOMTF_DATA.product()->size(i); std::cout << std::endl; 
-//  for (int i=-3; i<=4; i++) {
-//    for (l1t::RegionalMuonCandBxCollection::const_iterator it = digiCollectionOMTF_DATA.product()->begin(i);
-//       it != digiCollectionOMTF_DATA.product()->end(i); ++it) {
-//       std::cout <<" BX: "<<i<<", PT: "<<it->hwPt()<<" ETA: "<<it->hwEta()<<" PHI: "<<it->hwPhi()<<" link: "<<it->link() << std::endl;
-//    }
-//  }
-  std::vector<MyDigi> myData;
-  for (l1t::RegionalMuonCandBxCollection::const_iterator it = digiCollectionOMTF_DATA.product()->begin(bxNumber);
-       it != digiCollectionOMTF_DATA.product()->end(bxNumber); ++it) {
-    
-    MyDigi myDigi = { (unsigned int)it->processor(),  (int)it->hwPhi()+(int)it->hwEta()+(int)it->hwPt()+(int)it->trackSubAddress(l1t::RegionalMuonCand::kWeight), bxNumber};
-//  MyDigi myDigi = { (unsigned int)it->processor(),  it->hwPt(), bxNumber};
-    if (debug) std::cout <<"PT: "<<it->hwPt()<<" ETA: "<<it->hwEta()<<" PHI: "<<it->hwPhi()<<" link: "<<it->link() << std::endl;
-    if (debug) std::cout <<" MyDigi (DATA): " << myDigi << std::endl;
-    if (myData.end() == std::find(myData.begin(), myData.end(), myDigi)) myData.push_back(myDigi);
-    else if (debug) std::cout <<" DUPLICATE. " << std::endl;
-  }
-  std::sort(myData.begin(),myData.end());
-  if (debug) std::cout <<" myData size is: " << myData.size() << std::endl;
-
-  edm::Handle<l1t::RegionalMuonCandBxCollection> digiCollectionOMTF_EMUL;
-  ev.getByToken(inputOMTF_EMUL,digiCollectionOMTF_EMUL);
-  if (debug) std::cout <<" OMTF digis from EMUL" << std::endl;
-  std::vector<MyDigi> myEmul;
-  for (l1t::RegionalMuonCandBxCollection::const_iterator it = digiCollectionOMTF_EMUL.product()->begin(bxNumber);
-       it != digiCollectionOMTF_EMUL.product()->end(bxNumber); ++it) {
-    MyDigi myDigi = { (unsigned int)it->processor(),  (int)it->hwPhi()+(int)it->hwEta()+(int)it->hwPt()+(int)it->trackSubAddress(l1t::RegionalMuonCand::kWeight), bxNumber};
-//    MyDigi myDigi = { (unsigned int)it->processor(),  it->hwPt(), bxNumber};
-    if (debug) std::cout <<"PT: "<<it->hwPt()<<" ETA: "<<it->hwEta()<<" PHI: "<<it->hwPhi()<<" link: "<<it->link() << std::endl;
-    if (debug) std::cout <<" MyDigi (EMUL): " << myDigi << std::endl;
-    if (myEmul.end() == std::find(myEmul.begin(), myEmul.end(), myDigi)) myEmul.push_back(myDigi);
-    else if (debug) std::cout <<" DUPLICATE. " << std::endl;
-  }
-  std::sort(myEmul.begin(),myEmul.end());
-  if (debug) std::cout <<" myEmul size is: " << myEmul.size() << std::endl;
- 
-  bool hasError = false;
-  for (const auto & omtf : myData ) {
-     theAllMuonDigisCnt++;     
-     std::vector<MyDigi>::const_iterator it = find(myEmul.begin(), myEmul.end(), omtf);
-     if (it == myEmul.end() ) {
-       if (debug) std::cout << "HERE PROBLEM!!! ----- OMTF EMUL DIGI corresponding to OMTF DATA("<<omtf<<") NOT FOUND! " << std::endl;
-       hasError = true;
-       theErrMuonDigisCnt++; 
-     }
-  }
-  for (const auto & other : myEmul) {
-     theAllMuonDigisCnt++;     
-     std::vector<MyDigi>::const_iterator it = find(myData.begin(), myData.end(), other);
-     if (it == myData.end() ) {
-       if (debug) std::cout << "HERE PROBLEM!!! ----- OMTF DATA DIGI corresponding to OMTF EMUL("<<other<<") NOT FOUND! " << std::endl;
-       hasError = true;
-       theErrMuonDigisCnt++; 
-     }
-  }
-//  if (debug) std::cout <<" All OMTF: " << omtfDigis <<", with Error: "<< omtfDigisError <<" has Error: " << hasError << std::endl;
-    if (hasError) std::cout<<std::dec <<"PROBLEM MUOM   ======> Event #"<<theEventCnt<<", ev: "<<ev.id().event()<<std::endl;
-}
 
 void OmtfDigiCompare::analyzeCSC(const edm::Event &ev, const edm::EventSetup& es) {
   if (debug) std::cout << "------------- HERE DIGI COMPARE CSC --------------" << std::endl;
@@ -627,5 +557,81 @@ void OmtfDigiCompare::analyzeCSC(const edm::Event &ev, const edm::EventSetup& es
 //  if (debug) std::cout <<" All OMTF: " << omtfDigis <<", with Error: "<< omtfDigisError <<" has Error: " << hasError << std::endl;
     if (hasError) std::cout<<std::dec <<"PROBLEM CSC    ======> Event #"<<theEventCnt<<", ev: "<<ev.id().event()<<std::endl;
 
+}
+
+void OmtfDigiCompare::analyzeOMTF( const edm::Event &ev, const edm::EventSetup& es) {
+  debug=0;
+  if (debug) std::cout << "-------- HERE DIGI COMPARE OMTF---------" << std::endl;
+  int bxNumber = 0;
+
+  edm::Handle<l1t::RegionalMuonCandBxCollection> digiCollectionOMTF_DATA;
+  ev.getByToken(inputOMTF_DATA,digiCollectionOMTF_DATA);
+  if (debug) {
+    std::cout <<" OMTF digis from DATA" << std::endl;
+    std::cout <<" size of OMTF digis from DATA: "; for (int i=-3; i<=4; i++) std::cout << digiCollectionOMTF_DATA.product()->size(i); std::cout << std::endl; 
+    for (int i=-3; i<=4; i++) {
+      for (l1t::RegionalMuonCandBxCollection::const_iterator it = digiCollectionOMTF_DATA.product()->begin(i);
+         it != digiCollectionOMTF_DATA.product()->end(i); ++it) {
+         std::cout <<" BX: "<<i<<", PT: "<<it->hwPt()<<" ETA: "<<it->hwEta()<<" PHI: "<<it->hwPhi()<<" UPT: "<<it->hwPtUnconstrained() << std::endl;
+      }
+    }
+  }
+
+  std::vector<MyDigi> myData;
+  for (l1t::RegionalMuonCandBxCollection::const_iterator it = digiCollectionOMTF_DATA.product()->begin(bxNumber);
+       it != digiCollectionOMTF_DATA.product()->end(bxNumber); ++it) {
+    
+    MyDigi myDigi = { (unsigned int)it->processor(),  (int)it->hwPhi()+(int)it->hwEta()+(int)it->hwPt()+(int)it->hwPtUnconstrained(), bxNumber};
+//  MyDigi myDigi = { (unsigned int)it->processor(),  (int)it->hwPhi()+(int)it->hwEta()+(int)it->hwPt()+(int)it->trackSubAddress(l1t::RegionalMuonCand::kWeight), bxNumber};
+//  MyDigi myDigi = { (unsigned int)it->processor(),  it->hwPt(), bxNumber};
+    if (debug) std::cout <<"PT: "<<it->hwPt()<<" ETA: "<<it->hwEta()<<" PHI: "<<it->hwPhi()<<" link: "<<it->link()<<" hwUpt:"<<it->hwPtUnconstrained()<<" map_size:"<<it->trackAddress().size() << std::endl;
+//    for (const auto & m : it->trackAddress()) std::cout <<" map. first: "<<m.first<<", second: "<<m.second<<std::endl;
+
+    if (debug) std::cout <<" MyDigi (DATA): " << myDigi << std::endl;
+    if (myData.end() == std::find(myData.begin(), myData.end(), myDigi)) myData.push_back(myDigi);
+    else if (debug) std::cout <<" DUPLICATE. " << std::endl;
+  }
+  std::sort(myData.begin(),myData.end());
+  if (debug) std::cout <<" myData size is: " << myData.size() << std::endl;
+
+  edm::Handle<l1t::RegionalMuonCandBxCollection> digiCollectionOMTF_EMUL;
+  ev.getByToken(inputOMTF_EMUL,digiCollectionOMTF_EMUL);
+  if (debug) std::cout <<" OMTF digis from EMUL" << std::endl;
+  std::vector<MyDigi> myEmul;
+  for (l1t::RegionalMuonCandBxCollection::const_iterator it = digiCollectionOMTF_EMUL.product()->begin(bxNumber);
+       it != digiCollectionOMTF_EMUL.product()->end(bxNumber); ++it) {
+    MyDigi myDigi = { (unsigned int)it->processor(),  (int)it->hwPhi()+(int)it->hwEta()+(int)it->hwPt()+(int)( (it->hwPtUnconstrained() >> 2) & 0b11111), bxNumber};
+//  MyDigi myDigi = { (unsigned int)it->processor(),  (int)it->hwPhi()+(int)it->hwEta()+(int)it->hwPt()+(int)it->trackSubAddress(l1t::RegionalMuonCand::kWeight), bxNumber};
+//  MyDigi myDigi = { (unsigned int)it->processor(),  it->hwPt(), bxNumber};
+    if (debug) std::cout <<"PT: "<<it->hwPt()<<" ETA: "<<it->hwEta()<<" PHI: "<<it->hwPhi()<<" link: "<<it->link()<<" hwUpt:"<<it->hwPtUnconstrained()<<" map_size:"<<it->trackAddress().size() << std::endl;
+    if (debug) std::cout <<" dataword: "<<std::bitset<64>(it->dataword())<< std::endl;
+    if (debug) std::cout <<" MyDigi (EMUL): " << myDigi << std::endl;
+    if (myEmul.end() == std::find(myEmul.begin(), myEmul.end(), myDigi)) myEmul.push_back(myDigi);
+    else if (debug) std::cout <<" DUPLICATE. " << std::endl;
+  }
+  std::sort(myEmul.begin(),myEmul.end());
+  if (debug) std::cout <<" myEmul size is: " << myEmul.size() << std::endl;
+ 
+  bool hasError = false;
+  for (const auto & omtf : myData ) {
+     theAllMuonDigisCnt++;     
+     std::vector<MyDigi>::const_iterator it = find(myEmul.begin(), myEmul.end(), omtf);
+     if (it == myEmul.end() ) {
+       if (debug) std::cout << "HERE PROBLEM!!! ----- OMTF EMUL DIGI corresponding to OMTF DATA("<<omtf<<") NOT FOUND! " << std::endl;
+       hasError = true;
+       theErrMuonDigisCnt++; 
+     }
+  }
+  for (const auto & other : myEmul) {
+     theAllMuonDigisCnt++;     
+     std::vector<MyDigi>::const_iterator it = find(myData.begin(), myData.end(), other);
+     if (it == myData.end() ) {
+       if (debug) std::cout << "HERE PROBLEM!!! ----- OMTF DATA DIGI corresponding to OMTF EMUL("<<other<<") NOT FOUND! " << std::endl;
+       hasError = true;
+       theErrMuonDigisCnt++; 
+     }
+  }
+//  if (debug) std::cout <<" All OMTF: " << omtfDigis <<", with Error: "<< omtfDigisError <<" has Error: " << hasError << std::endl;
+    if (hasError) std::cout<<std::dec <<"PROBLEM MUOM   ======> Event #"<<theEventCnt<<", ev: "<<ev.id().event()<<std::endl;
 }
 DEFINE_FWK_MODULE(OmtfDigiCompare);

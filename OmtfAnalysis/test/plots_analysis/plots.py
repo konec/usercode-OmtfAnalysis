@@ -30,11 +30,11 @@ canvas = TObjArray()
 #plotsMuon.plotAll(canvas)
 #plotsEff.plotAll(canvas)
 #plotsSecMuSel.plotAll(canvas)
-plotsDataEmul.plotAll(canvas)
+#plotsDataEmul.plotAll(canvas)
 #plotsTime.plotAll(canvas)
 
 #plotsMenu.plotAll(canvas)
-#plotsSynch.plotAll(canvas)
+plotsSynch.plotAll(canvas)
 #plotsDiMu.plotAll(canvas)
 #plotsL1Dist.plotAll(canvas)
 
