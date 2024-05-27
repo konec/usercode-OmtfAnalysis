@@ -50,7 +50,7 @@ std::ostream& operator<<(std::ostream& os, const BxStatObj& stat) {
   os <<" rms: "<<std::setw(4)<<std::fixed<<std::setprecision(2)<<stat.rms();
   os <<" counts: ";
   for (unsigned int i=0; i< stat.dim; i++) {
-   unsigned int n= ( (int)i-stat.offset==0) ? 5 : 4;
+   unsigned int n= ( (int)i-stat.offset==0) ? 6 : 5;
    os <<std::setw(n)<< stat.theCounts[i];
   }
   return os;

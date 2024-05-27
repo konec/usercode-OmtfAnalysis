@@ -1,11 +1,11 @@
 from WMCore.Configuration import Configuration
 
-setEra='Run2024C'
+setEra='Run2024D'
 #setType='Muon'
 #setType='JetMET'
 setType='ExpressPhysics'
 setId=''
-jobVer='3'
+jobVer='1'
 #json='Cert_Collisions2023_eraC_367095_368823_Golden.json'
 #json='Cert_Collisions2023_eraB_366403_367079_Golden.json'
 #json='JSON.txt'
@@ -40,13 +40,13 @@ config.Data.inputDataset = '/'+setType+setId+'/'+setEra+'-'+inputDataSet
 #config.Data.runRange = '362719-362760'
 #config.Data.runRange = '379530'
 #config.Data.runRange = '379774'
-config.Data.runRange = '379866'
+config.Data.runRange = '380255-380627'
 
 config.Data.useParent = False 
 config.Data.inputDBS = 'global'
 config.Data.splitting = 'LumiBased'
 #config.Data.splitting = 'Automatic'
-config.Data.unitsPerJob = 20 #number of files per jobs
+config.Data.unitsPerJob = 100 #number of files per jobs
 config.Data.totalUnits =  -1 #number of event
 config.Data.outLFNDirBase = '/store/user/konec/crabout/'
 config.Data.publication = False 

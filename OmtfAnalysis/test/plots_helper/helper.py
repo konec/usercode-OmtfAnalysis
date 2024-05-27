@@ -1,11 +1,12 @@
-#!/cvmfs/cms.cern.ch/slc7_amd64_gcc11/cms/cmssw/CMSSW_13_1_0/external/slc7_amd64_gcc11/bin/python3
+#!/cvmfs/cms.cern.ch/slc7_amd64_gcc12/cms/cmssw/CMSSW_14_0_5/external/slc7_amd64_gcc12/bin/python3
 
 from ROOT import *
 gROOT.Reset()
 #f = TFile('../omtfHelper.root');
 #f = TFile('../../jobs/Run2023C_Muon/crab_Muon1_jobVer1/omtfHelper.root');
 #f = TFile('../../jobs/omtfHelper_Mu.root');
-f = TFile('../../jobs/Run2024C_ExpressPhysics/crab_ExpressPhysics_jobVer1/omtfHelper.root');
+#f = TFile('../../jobs/Run2024C_ExpressPhysics/crab_ExpressPhysics_jobVer1/omtfHelper.root');
+f = TFile('../../jobs/Run2024D_ExpressPhysics/crab_ExpressPhysics_jobVer1/omtfHelper.root');
 f.ls();
 
 

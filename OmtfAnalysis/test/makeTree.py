@@ -20,6 +20,7 @@ process = cms.Process('OmtfTree')
 #dataDir='/eos/cms/store/express/Run2024A/ExpressCosmics/FEVT/Express-v1/000/378/179/00000/'
 #dataDir='/eos/cms/store/express/Run2024B/ExpressPhysics/FEVT/Express-v1/000/379/252/00000/'
 dataDir='/eos/cms/store/express/Run2024C/ExpressPhysics/FEVT/Express-v1/000/379/530/00000/'
+dataDir='/eos/cms/store/express/Run2024D/ExpressPhysics/FEVT/Express-v1/000/380/627/00000/'
 lsCommand='ls -1 '+dataDir+'|grep root'
 
 print ('command: ',lsCommand)
@@ -63,7 +64,7 @@ skipEvents =  cms.untracked.uint32(0)
 #skipEvents =  cms.untracked.uint32(19177+1117)
 #skipEvents =  cms.untracked.uint32(19177+1332)
 )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10000) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
 
 #
 # import of standard configurations
@@ -216,7 +217,7 @@ process.omtfEmulator.sorterType = cms.string("byLLH")
 process.omtfEmulator.ghostBusterType = cms.string("byRefLayer") # byLLH byRefLayer GhostBusterPreferRefDt
 process.omtfEmulator.goldenPatternResultFinalizeFunction = cms.int32(10)
 
-process.omtfEmulator.lctCentralBx = cms.int32(8);
+process.omtfEmulator.lctCentralBx = cms.int32(8)
 process.omtfEmulator.bxMin = cms.int32(-3)
 process.omtfEmulator.bxMax = cms.int32(4)
 
